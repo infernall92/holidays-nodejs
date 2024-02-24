@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "name": "iva",
+    "email": "iva@example.com",
+    "password": "ivaiva"
+  },
+  {
+    "id": 1,
+    "name": "icho",
+    "email": "icho@example.com",
+    "password": "ichoicho"
+  },
+  {
+    "id": 2,
+    "name": "venci",
+    "email": "venci@example.com",
+    "password": "vencivenc"
+  },
+  {
+    "id": 3,
+    "name": "dancho",
+    "email": "dancho@example.com",
+    "password": "danchov"
+  },
+  {
+    "id": 4,
+    "name": "kolyo",
+    "email": "kolyo@example.com",
+    "password": "kolyox"
+  },
+  {
+    "id": 5,
+    "name": "petar",
+    "email": "petar@example.com",
+    "password": "petarcho"
+  }
+]
