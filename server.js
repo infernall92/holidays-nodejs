@@ -466,4 +466,4 @@ app.post('/admin/disable-days', (req, res) => {
 
 
 
-app.listen(PORT, () => {console.log(`Server is running on ${PORT}`)})
+app.listen(process.env.PORT || PORT, () => {console.log(`Server is running on ${PORT}`)})
