@@ -112,6 +112,7 @@ app.post('/admin/pending-requests/:id', (req, res) => {
         id: requestId,
         userId: request.userId, 
         days: request.days,
+        message: request.message,
         status: request.status
         
     };
@@ -157,6 +158,7 @@ app.post('/login', (req, res) => {
         if (authenticatedEmployee) {
             // Authentication successful
             const userId = authenticatedEmployee.id; // Retrieve userID from 'id'
+            const userName = authenticatedEmployee.name // Retrieve userName from 'name'
             
             // Generate a token
             const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
@@ -165,7 +167,7 @@ app.post('/login', (req, res) => {
             res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // Cookie expires in 1 hour (3600000 milliseconds)
             
             // Send the token in the response
-            res.json({ userId });
+            res.json({ userId, userName });
         } else {
             // Attempt authentication against admins.json
             fs.readFile('admins.json', (err, adminData) => {
@@ -182,7 +184,7 @@ app.post('/login', (req, res) => {
                 if (authenticatedAdmin) {
                     // Authentication successful
                     const userId = authenticatedAdmin.id; // Retrieve userID from 'id'
-                    
+                    const userName = authenticatedAdmin.name;
                     // Generate a token
                     const token = jwt.sign({ userId }, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
                     
@@ -190,7 +192,7 @@ app.post('/login', (req, res) => {
                     res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // Cookie expires in 1 hour (3600000 milliseconds)
                     
                     // Send the token in the response
-                    res.json({ userId });
+                    res.json({ userId, userName });
                 } else {
                     // Authentication failed
                     res.status(401).send('Unauthorized');
@@ -392,7 +394,7 @@ app.post('/admin/disable-days', (req, res) => {
     res.json({ disabledDays });
   });
 
-//-------------ENABLE DISABLED DAYS----------------
+//------------------DELETE FROM DISABLED DAYS JSON ----------------------
 
 app.delete('/admin/delete-disabled-day', (req, res) => {
     const daysToDelete = req.body.daysToDelete;
@@ -414,6 +416,10 @@ app.delete('/admin/delete-disabled-day', (req, res) => {
     }
 });
 
+
+
+
+
   const generateSecretKey = () => {
     return crypto.randomBytes(32).toString('hex');
   };
@@ -421,5 +427,71 @@ app.delete('/admin/delete-disabled-day', (req, res) => {
   // Generate the secret key
   const secretKey = generateSecretKey();
 
+  
+// app.put('/admin/approve-request/:id', (req, res) => {
+//     const requestId = req.params.id;
+    
+//     // Read the pending requests from the file
+//     fs.readFile('pending-requests.json', (err, data) => {
+//         if (err) {
+//             console.error('Error reading file:', err);
+//             res.status(500).send('Internal Server Error');
+//             return;
+//         }
 
-app.listen(process.env.PORT || PORT, () => {console.log(`Server is running on ${PORT}`)})
+//         let pendingRequests = JSON.parse(data);
+
+//         // Find the request to be approved by ID
+//         const approvedRequestIndex = pendingRequests.findIndex(request => request.id === requestId);
+//         if (approvedRequestIndex === -1) {
+//             res.status(404).send('Request not found');
+//             return;
+//         }
+
+//         // Get the approved request
+//         const approvedRequest = pendingRequests[approvedRequestIndex];
+
+//         // Remove the request from pending requests
+//         pendingRequests.splice(approvedRequestIndex, 1);
+
+//         // Write the updated pending requests to the file
+//         fs.writeFile('pending-requests.json', JSON.stringify(pendingRequests, null, 2), err => {
+//             if (err) {
+//                 console.error('Error writing to file:', err);
+//                 res.status(500).send('Internal Server Error');
+//                 return;
+//             }
+
+//             // Read approved requests from the file
+//             fs.readFile('approved-requests.json', (err, data) => {
+//                 if (err) {
+//                     console.error('Error reading file:', err);
+//                     res.status(500).send('Internal Server Error');
+//                     return;
+//                 }
+
+//                 let approvedRequests = JSON.parse(data);
+
+//                 // Add the approved request to approved requests
+//                 approvedRequests.push(approvedRequest);
+
+//                 // Write the updated approved requests to the file
+//                 fs.writeFile('approved-requests.json', JSON.stringify(approvedRequests, null, 2), err => {
+//                     if (err) {
+//                         console.error('Error writing to file:', err);
+//                         res.status(500).send('Internal Server Error');
+//                         return;
+//                     }
+
+//                     console.log('Request approved and moved to approved-requests.json:', approvedRequest);
+//                     res.json({ message: 'Request approved successfully' });
+//                 });
+//             });
+//         });
+//     });
+// });
+
+
+
+
+app.listen(PORT, () => {console.log(`Server is running on ${PORT}`)})
